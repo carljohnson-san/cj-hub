@@ -52,37 +52,14 @@ local Window = Rayfield:CreateWindow({
     end,
  })
 
-local Slider = PlayerTab:CreateSlider({
+ local Slider = PlayerTab:CreateSlider({
     Name = "Fling Power",
-    Range = {10, 5000},
-    Increment = 10,
-    Suffix = "Power",
-    CurrentValue = 1000,
-    Flag = "FlingPowerSlider",
+    Range = {10, 500},
+    Increment = 1,
+    Suffix = "Fling",
+    CurrentValue = 500,
+    Flag = "Slider5", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(Value)
-        -- Fling function
-        local function fling(target, power)
-            if target and target:FindFirstChild("HumanoidRootPart") then
-                local humanoidRootPart = target.HumanoidRootPart
-                local bodyVelocity = Instance.new("BodyVelocity")
-                bodyVelocity.Velocity = Vector3.new(math.random(-power, power), power, math.random(-power, power))
-                bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)  -- Applying extreme force to fling
-                bodyVelocity.P = 10000  -- High value for more forceful fling
-                bodyVelocity.Parent = humanoidRootPart
-                
-                -- Clean up after 0.1 seconds
-                game:GetService("Debris"):AddItem(bodyVelocity, 0.1)
-            end
-        end
-        
-        -- Apply fling to all players except the local player
-        for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
-            if player ~= game.Players.LocalPlayer and player.Character then
-                local character = player.Character
-                if character:FindFirstChild("HumanoidRootPart") then
-                    fling(character, Value / 10)  -- Adjust value for appropriate fling range
-                end
-            end
-        end
+     game.Players.LocalPlayer.Character.Humanoid.FlingPower = Value
     end,
-})
+ })
