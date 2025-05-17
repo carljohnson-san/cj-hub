@@ -51,14 +51,31 @@ local Window = Rayfield:CreateWindow({
      game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
     end,
  })
-
-      local Slider = PlayerTab:CreateSlider({
-         Name = "Fling Power",
-         Range = {10, 5000},
-         CurrentValue = 5000,
-         Callback = function(Value)
-             -- Fling function
-         end,
-     })
-     ```
-
+ 
+ local Slider = PlayerTab:CreateSlider({
+    Name = "Spin Speed",
+    Range = {1, 5000}, -- Adjust the range as needed
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = 5000, -- Default spin speed
+    Flag = "SpinSpeedSlider", -- Unique flag for configuration saving
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        local character = player.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            -- Create a spinning effect
+            local spinSpeed = Value
+            local bodyGyro = Instance.new("BodyGyro")
+            bodyGyro.MaxTorque = Vector3.new(0, math.huge, 0) -- Allow spinning around the Y-axis
+            bodyGyro.P = 3000 -- High power for quick response
+            bodyGyro.CFrame = character.HumanoidRootPart.CFrame
+            bodyGyro.Parent = character.HumanoidRootPart
+            
+            -- Spin the character
+            while true do
+                bodyGyro.CFrame = bodyGyro.CFrame * CFrame.Angles(0, math.rad(spinSpeed), 0)
+                wait(0.1) -- Adjust the wait time for smoother or faster spinning
+            end
+        end
+    end,
+})
